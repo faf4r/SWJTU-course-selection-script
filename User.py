@@ -175,6 +175,8 @@ class User:
                     break
                 elif '选课申请成功' in msg:
                     break
+                elif '优选班' in msg:
+                    break
             except Exception as e:
                 # self.send('全部成绩查询报错', str(e))
                 print(f'\n{course} error: {datetime.now()}】\n', e)

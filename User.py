@@ -134,6 +134,21 @@ class User:
         # print(listId)
         self.del_course(chooseId=chooseId, listId=listId)
 
+    def del_courses_with_chooseIdList(self, chooseId_list):
+        url = 'http://jwc.swjtu.edu.cn/vatuu/CourseStudentAction?setAction=studentCourseSysList&viewType=delCourse'
+        res = self.ss.get(url)
+        html = etree.HTML(res.text)
+        elements = html.xpath('//*[@id="table3"]/tr')[1:-1]
+        for element in elements:
+            # print(element.xpath('td[3]/text()')[0].strip())
+            chooseId = element.xpath('td[3]/text()')[0].strip()
+            if chooseId in chooseId_list:
+                listId = element.xpath('td[12]/input/@onclick')[0].strip().split(',')[-2].strip('\'"')
+                print(f'正在删除：{chooseId} {listId}')
+                # 有了上述提示信息，报错后可以选择使用del_course直接删除
+                self.del_course(chooseId=chooseId, listId=listId)
+                print(f'{chooseId}删除成功')
+
     def run_select_course(self, chooseId):
         while True:
             try:
@@ -169,7 +184,7 @@ class User:
         while True:
             try:
                 msg = self.select_course(teachId)
-                print(f"course {course}: ", end='')
+                print(f"【{datetime.now()}】course {course}: ", end='')
                 print(msg)
                 if '选课成功' in msg:
                     break
@@ -181,6 +196,8 @@ class User:
                     break
                 elif '优选班' in msg:
                     break
+            except IndexError:
+                print(f"【{datetime.now()}】选课系统未开放...")
             except Exception as e:
                 # self.send('全部成绩查询报错', str(e))
                 print(f'\n{course} error: {datetime.now()}】\n', e)

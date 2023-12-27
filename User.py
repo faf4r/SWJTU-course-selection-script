@@ -148,11 +148,15 @@ class User:
                     break
                 elif '选课申请成功' in msg:
                     break
-                elif '该课程只允许优选班选课' in msg:
+                elif '成功' in msg:
                     break
+                elif '优选班' in msg:
+                    break
+            except IndexError:
+                print(f'【{datetime.now()}选课系统未开启】')
             except Exception as e:
                 # self.send('全部成绩查询报错', str(e))
-                print(f'\nerror: {datetime.now()}】\n', e)
+                print(f'\n【error: {datetime.now()}】\n', e)
             time.sleep(1)
 
     def run_select_course_with_teachId(self, teachId, course):
